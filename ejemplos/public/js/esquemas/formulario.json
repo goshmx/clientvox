@@ -1,0 +1,19 @@
+{
+    "type": "object",
+    "cb": {
+        "ok": "console.log(arguments[0]);console.log(\"Se ha realizado exitosamente la petición\");",
+        "error": "console.log(arguments[0]);console.log(\"Error al realizar la petición.\");"
+    },
+    "properties": {
+        "nombre" : {
+            "type": "string",
+            "minLength": 3,
+            "rules": [ "trim" ]
+        },
+        "apellidos": {
+            "type": "string",
+            "minLength": 3,
+            "rules": [ "trim" ]
+        }
+    }
+}

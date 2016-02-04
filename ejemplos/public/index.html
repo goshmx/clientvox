@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ejemplo del uso del App</title>
+<script type="text/javascript" src="dependencias/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="dependencias/async/lib/async.js"></script>
+<script type="text/javascript" src="dependencias/schema-inspector/lib/schema-inspector.js"></script>
+<script type="text/javascript" src="dependencias/mustache/mustache.js"></script>
+<script type="text/javascript" src="dependencias/underscore/underscore.js"></script>
+<script type="text/javascript" src="dependencias/backbone/backbone.js"></script>
+<script type="text/javascript" src="dependencias/clientapp/dist/desarrollo/unserialize.js"></script>
+<script type="text/javascript" src="dependencias/clientapp/dist/desarrollo/prototipos.js"></script>
+<script type="text/javascript" src="dependencias/clientapp/dist/desarrollo/app.js"></script>
+<script type="text/javascript" src="dependencias/clientapp/dist/desarrollo/formularios.js"></script>
+<!--
+// En la versión de producción no se envían mensajes a la consola y esta minimizado el archivo
+<script type="text/javascript" src="../dist/produccion/app.js"></script>
+-->
+<script type="text/javascript" src="js/rutas.js"></script>
+<style>
+    #loader{
+	position: fixed;
+	width:100%;
+	height: 100%;
+	z-index: 1000;
+	background-color: #fff;
+    }
+    #loader .msg{
+	width:270px;
+	height:82px;
+	font-size: 14px;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin:-41px 0 0 -135px;
+	text-align: center;
+	background: url('img/loader.gif') center center no-repeat;
+    }
+</style>
+</head>
+<body>
+<div id="loader">
+    <div class="msg">
+        <span class="txt">Cargando componentes...</span>
+        <span class="porcentaje">0%</span>
+    </div>
+</div>
+<div id="contenedor">Contenido inicial</div>
+<script type="text/javascript">
+var myApp = new App({
+    url:{
+	app: "URL_APP",
+	api: "URL_API",
+	vistas: "js/vistas/"
+    },
+    loader: "loader", // ID del div que muestra el mensaje de carga si no se define es loader por defecto
+    rutas: new rutas(), // Definido en rutas.js
+    carga: ["vistas","esquemas","catalogos"], // Opcional si no se especifica se intentan cargas los 3 elementos
+    vistas: {
+	pruebas : "{vistas}pruebas.html",
+	formulario : "{vistas}formulario.html"
+    },
+    esquemas: {
+	validacionX : "js/esquemas/formulario.json"
+    },
+    catalogos: {
+	paises : "{api}catalogos/pais"
+    }
+});
+</script>
+<a href="#limpiar">Limpiar</a>
+<a href="#asignar-vista">Renderizar vista</a>
+<a href="#formularioX">Mostrar formulario</a>
+</body>
+</html>

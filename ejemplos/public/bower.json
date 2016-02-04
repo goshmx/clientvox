@@ -1,0 +1,30 @@
+{
+  "name": "ejemploclientvox",
+  "version": "0.0.1",
+  "authors": [
+    "goshmx"
+  ],
+  "description": "Aplicación de ejemplo",
+  "main": "index.html",
+  "keywords": [
+    "app",
+    "ejemplo"
+  ],
+  "license": "ISC",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "dependencias",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.8",
+    "backbone": "*",
+    "mustache": "~0.8.1",
+    "schema-inspector": "~1.4.8",
+    "clientvox": ""
+  }
+}

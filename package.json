@@ -1,0 +1,29 @@
+{
+  "name": "clientvox",
+  "version": "0.1.0",
+  "description": "Core de integracion para el lado del cliente",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "app",
+    "mvc",
+    "cliente"
+  ],
+  "private": true,
+  "author": "goshmx",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.6.2",
+    "gulp-concat": "^2.2.0",
+    "gulp-jshint": "^1.6.1",
+    "gulp-strip-debug": "^0.3.0",
+    "gulp-uglify": "^0.3.0"
+  }
+}
