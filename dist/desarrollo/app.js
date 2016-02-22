@@ -3,6 +3,7 @@ $.ajaxSettings.cache = false;
 
 var App = function(opciones){
     var p = this;
+    p.appname = opciones.appname;
     p.debug = opciones.debug;
     p.rutas = opciones.rutas;
     p.loader = opciones.loader || 'loader';
@@ -60,6 +61,7 @@ App.prototype.init = function(aplicacion){
                 actual++;
                 var porcentaje = parseInt((actual/total)*100);
                 $('#'+aplicacion.loader+' .porcentaje').html(porcentaje + '%');
+                $('#'+aplicacion.loader+' .progress .progress-bar').animate({width:porcentaje+'%'},50);
                 elementos[llave] = d;
                 if (porcentaje === 100) {
                     app.consola('========== Finalizando la carga de elementos ==========','debug');
@@ -85,42 +87,12 @@ App.prototype.init = function(aplicacion){
 
 App.prototype.render = function( destino, vista, datos ){
     var app = this;
-    var formulario = (vista.match(/form/))? true : false ;
     datos = datos || {};
-    $(destino).html(Mustache.render(vista,datos));
+    var template = Handlebars.compile(vista);
+    var html = template(datos);
+    var formulario = (vista.match(/form/))? true : false ;
+    $(destino).html(html);
     if ( formulario ) {
-        $('.formulario-envio').submit(function(e){
-            e.preventDefault();
-            var formulario = $(this);
-            var accion = formulario.attr('action');
-            var metodo = formulario.attr('method').length > 0 ? formulario.attr('method') : 'get' ;
-            var registro = $.unserialize(formulario.serialize());
-            var esquema = formulario.attr('data-esquema');
-            var errores = SchemaInspector.validate(app.esquemas[esquema],registro).format();
-            var errExp = /@\.(.*):./g;
-            var invalidos = errExp.matches(errores);
-            if( invalidos.length > 0 ) {
-                this.consola(invalidos);
-                $.each(invalidos,function(indice, valor){
-                    var nombre = valor[1];
-                    // Rutina para colorear campos con errores
-                    formulario.find('input[name="'+nombre+'"]').css('border','1px red solid');
-                });
-            }else{
-                $.ajax({
-                    type: metodo,
-                    url: accion,
-                    data: registro
-                }).done(function(x){
-                    var cb = app.esquemas[esquema].cb || {};
-                    eval(cb.ok || '');
-                }).fail(function( xhrObj , mensaje ){
-                    var cb = app.esquemas[esquema].cb || {};
-                    eval(cb.error || '');
-                });
-            }
-            console.log(errores) ;
-            console.log(registro);
-        });
+        $('.form-validate').parsley();
     }
 };
