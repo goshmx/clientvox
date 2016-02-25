@@ -23,6 +23,8 @@
   "dependencies": {
     "backbone": "~1.2.3",
     "handlebars": "~4.0.5",
-    "parsleyjs": "~2.2.0"
+    "parsleyjs": "~2.2.0",
+    "datatables": "https://github.com/DataTables/DataTables.git#~1.10.10",
+    "jquery.serializeJSON": "~2.7.2"
   }
 }

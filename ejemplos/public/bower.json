@@ -21,10 +21,8 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "1.8",
-    "backbone": "*",
-    "mustache": "~0.8.1",
-    "schema-inspector": "~1.4.8",
-    "clientvox": ""
-  }
+    "jquery": "~2.1.1",
+    "clientvox": "https://github.com/goshmx/clientvox.git"
+  },
+  "private":true
 }

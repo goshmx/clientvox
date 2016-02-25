@@ -14,7 +14,7 @@ var rutas = Backbone.Router.extend({
     var datos = {
       usuario : "Un Nombre Aquí"
     };
-    myApp.render("#contenedor",myApp.vistas.pruebas,datos,1);
+    myApp.render("#contenedor",myApp.vistas.principal,datos);
   },
   limpiar: function(){
     this.titulo("Contenedor limpio");
