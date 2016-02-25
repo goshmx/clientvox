@@ -91,6 +91,7 @@ App.prototype.render = function( destino, vista, datos ){
     var template = Handlebars.compile(vista);
     var html = template(datos);
     var formulario = (vista.match(/form/))? true : false ;
+    $(destino).html('');
     $(destino).html(html);
     var titulo = $(destino).children().data('title');
     document.title = myApp.appname+" - " + (isDefined(titulo)?titulo:'Inicio');
@@ -98,6 +99,7 @@ App.prototype.render = function( destino, vista, datos ){
         $('.form-validate').parsley();
         app.sender.init('.form-validate');
     }
+    generaTabla('.data-tbl'); /*Asignacion de datatables por default*/
 };
 
 App.prototype.sender = {

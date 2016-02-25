@@ -67,10 +67,8 @@ var rutas = Backbone.Router.extend({
         if (!callback) callback = this[name];
         var f = function() {
             myApp.consola('Evento de ruta '+route+' antes de renderizar', 'debug');
-            $('#contenedor-app').html('');
             callback.apply(router, arguments);
             myApp.consola('Evento de ruta despues de renderizar', 'debug');
-            generaTabla('.data-tbl'); /*Asignacion de datatables por default*/
             //dataSubmit.init('.form-validate');/*Validacion de formularios por default COLOCAR EN CLIENTVOX TAMBIEN*/
         };
         return Backbone.Router.prototype.route.call(this, route, name, f);
