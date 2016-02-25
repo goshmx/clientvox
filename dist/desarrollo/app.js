@@ -92,6 +92,8 @@ App.prototype.render = function( destino, vista, datos ){
     var html = template(datos);
     var formulario = (vista.match(/form/))? true : false ;
     $(destino).html(html);
+    var titulo = $(destino).children().data('title');
+    document.title = myApp.appname+" - " + (isDefined(titulo)?titulo:'Inicio');
     if ( formulario ) {
         $('.form-validate').parsley();
         app.sender.init('.form-validate');

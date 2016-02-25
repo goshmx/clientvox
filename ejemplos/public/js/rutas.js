@@ -69,16 +69,11 @@ var rutas = Backbone.Router.extend({
             myApp.consola('Evento de ruta '+route+' antes de renderizar', 'debug');
             $('#contenedor-app').html('');
             callback.apply(router, arguments);
-            this.titulo($('#plantilla').data('title'));
             myApp.consola('Evento de ruta despues de renderizar', 'debug');
             generaTabla('.data-tbl'); /*Asignacion de datatables por default*/
             //dataSubmit.init('.form-validate');/*Validacion de formularios por default COLOCAR EN CLIENTVOX TAMBIEN*/
         };
         return Backbone.Router.prototype.route.call(this, route, name, f);
-    },
-    titulo : function(pos){
-        pos = pos || "Inicio";
-        document.title = myApp.appname+" - " + pos;
     },
     routeParams: {},
     routes : {
