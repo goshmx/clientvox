@@ -1,1 +1,0 @@
-RegExp.prototype.matches=function(e){for(var t,o=[];null!==(t=this.exec(e));)o.push(t);return o},String.prototype.quitaAcentos=function(){var e=/[àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ]/g,t="aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY";return this.replace(e,function(o){return t.substr(e.source.indexOf(o)-1,1)})};

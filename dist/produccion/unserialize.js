@@ -1,1 +1,0 @@
-!function(e){e.unserialize=function(e){for(var n,i,t=decodeURI(e),r=t.split("&"),l={},s=0,u=r.length;u>s;s++)if(n=r[s].split("="),i=n[0],i.indexOf("[]")==i.length-2){var f=i.substring(0,i.length-2);void 0===l[f]&&(l[f]=[]),l[f].push(n[1])}else l[i]=n[1];return l}}(jQuery);

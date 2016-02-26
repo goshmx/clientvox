@@ -22,13 +22,10 @@ App.prototype.consola = function(mensaje,tipo){
         switch(tipo) {
             case 'debug':
                 return console.debug(mensaje);
-                break;
             case 'error':
                 return console.error(mensaje);
-                break;
             case 'info':
                 return console.info(mensaje);
-                break;
             default:
                 return console.log(mensaje);
         }
@@ -136,7 +133,7 @@ App.prototype.sender = {
         var divDom = $(div);
         var attrs = divDom.attrs();
 
-        if ((divDom.find('input[type="file"]').length>0) && (isDefined(divDom.attr('backbone')) == false) && (isDefined(divDom.attr('ajax')) == false)) {
+        if ((divDom.find('input[type="file"]').length>0) && (isDefined(divDom.attr('backbone')) === false) && (isDefined(divDom.attr('ajax')) === false)) {
             if(isDefined(divDom.attr('enctype'))){
                 if(divDom.attr('enctype') != 'multipart/form-data'){
                     myApp.consola('Hay inputs tipo archivo en el form, no olvides agregar "enctype="multipart/form-data" a tu form para hacer el envio','debug');
@@ -211,11 +208,12 @@ App.prototype.sender = {
     },
     SendBackbone: function(dataSubmit){
         myApp.consola('Evento canalizado a un Backbone');
+        var instancia;
         switch (dataSubmit.method){
             /*Metodo POST nuevo registro*/
             case 'post':
                 if(dataSubmit.serializeJson){
-                    var instancia = new myModel[dataSubmit.model](dataSubmit.serializeJson);
+                    instancia = new myModel[dataSubmit.model](dataSubmit.serializeJson);
                     instancia.save({}, {
                         success: function (model, response, options) {
                             myApp.consola('Registro guardado en backbone','debug');
@@ -240,7 +238,7 @@ App.prototype.sender = {
             /*Metodo GET consulta de registro*/
             case 'get':
                 if(dataSubmit.key){
-                    var instancia = new myModel[dataSubmit.model]({id:dataSubmit.key});
+                    instancia = new myModel[dataSubmit.model]({id:dataSubmit.key});
                     instancia.fetch({
                         success: function (response) {
                             myApp.consola('Registro encontrado en backbone','debug');
@@ -265,7 +263,7 @@ App.prototype.sender = {
             /*Metodo PUT actualizar registro*/
             case 'put':
                 if(dataSubmit.key){
-                    var instancia = new myModel[dataSubmit.model]({id:dataSubmit.key});
+                    instancia = new myModel[dataSubmit.model]({id:dataSubmit.key});
                     instancia.fetch({
                         success: function (response) {
                             myApp.consola('Registro encontrado en backbone','debug');
@@ -303,7 +301,7 @@ App.prototype.sender = {
             /*Metodo DELETE Eliminar registro*/
             case 'delete':
                 if(dataSubmit.key) {
-                    var instancia = new myModel[dataSubmit.model]({id: dataSubmit.key});
+                    instancia = new myModel[dataSubmit.model]({id: dataSubmit.key});
                     instancia.destroy({
                         success: function (model, response, options) {
                             myApp.consola('Registro eliminado en backbone','debug');
