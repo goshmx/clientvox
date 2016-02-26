@@ -78,10 +78,10 @@ var rutas = Backbone.Router.extend({
     '' : 'cargaVista',
     'asignar-vista' : 'cargaVista',
     'limpiar' : 'limpiar',
-    'formularioX' : 'mostrarFormulario'
+    'formularioX' : 'mostrarFormulario',
+    'ejemplo/*subroute'  : "invocaEjemploRoute"
     },
     cargaVista: function(){
-    this.titulo("Cargando Vista");
     var datos = {
       usuario : "Un Nombre Aquí"
     };
@@ -90,11 +90,19 @@ var rutas = Backbone.Router.extend({
     myApp.sender.init({action:'http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=44db6a862fba0b067b1930da0d769e98', ajax:true, callback:function(datos){console.log(datos);}});
     },
     limpiar: function(){
-    this.titulo("Contenedor limpio");
     $('#contenedor').html("");
     },
     mostrarFormulario: function(){
-    this.titulo("Mostrando Formulario");
     myApp.render("#contenedor",myApp.vistas.admin);
-    }
+    },
+    invocaEjemploRoute: function(subroute) {
+        EjemploRouter = new EjemploRouter("ejemplo/");
+        if (!EjemploRouter) {
+            console.log('Existe el ejemploRouter');
+
+        }
+        else{
+            console.log('No Existe el ejemploRouter');
+        }
+    },
 });

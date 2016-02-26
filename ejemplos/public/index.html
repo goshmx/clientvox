@@ -3,11 +3,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ejemplo del uso del App</title>
 
-<!--
-// En la versión de producción no se envían mensajes a la consola y esta minimizado el archivo
-<script type="text/javascript" src="../dist/produccion/app.js"></script>
--->
-
 <style>
     #loader{
 	position: fixed;
@@ -42,6 +37,7 @@
 <script type="text/javascript" src="dependencias/handlebars/handlebars.min.js"></script>
 <script type="text/javascript" src="dependencias/underscore/underscore-min.js"></script>
 <script type="text/javascript" src="dependencias/backbone/backbone-min.js"></script>
+<script type="text/javascript" src="dependencias/backbone.subroute/dist/backbone.subroute.min.js"></script>
 <script type="text/javascript" src="dependencias/parsleyjs/dist/parsley.min.js"></script>
 <script type="text/javascript" src="dependencias/parsleyjs/dist/i18n/es.js"></script>
 <script type="text/javascript" src="dependencias/datatables/media/js/jquery.dataTables.js"></script>
@@ -50,12 +46,17 @@
 <script type="text/javascript" src="dependencias/clientvox/dist/desarrollo/app.js"></script>
 <script type="text/javascript" src="dependencias/clientvox/dist/desarrollo/common.js"></script>
 
+
+
 <script type="text/javascript" src="js/rutas.js"></script>
+<script type="text/javascript" src="js/subruta.js"></script>
 <script type="text/javascript" src="js/init.js"></script>
 
 
 <a href="#limpiar">Limpiar</a>
 <a href="#asignar-vista">Renderizar vista</a>
 <a href="#formularioX">Mostrar formulario</a>
+<a href="#ejemplo/">Subruta Ejemplo Index</a>
+<a href="#ejemplo/test2">Subruta Ejemplo Test</a>
 </body>
 </html>
