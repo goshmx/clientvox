@@ -1,7 +1,7 @@
 # Clientvox
 Clientvox es un core de librerías que permiten desarrollar de forma mucho más rápida aplicaciones web basadas en Backbone.js
 
-Las librerias con las trabaja con:
+Las librerias con las que trabaja son:
 
 - Backbone
 - Handlebars
@@ -30,7 +30,7 @@ Un archivo para controlar el comportamiento de la App, con banderas para habilit
 
 ### Inicialización
 1. Inicializar los scripts y sus dependencias.
-2. Isertar archivos js, adicionales.
+2. Insertar archivos js, adicionales.
 3. Insertar las rutas y subrutas que utilizará la aplicación.
 4. Insertar el archivo de inicialización del sistema.
 
