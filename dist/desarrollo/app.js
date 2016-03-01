@@ -340,7 +340,7 @@ App.prototype.sender = {
         }
         else{
             if(dataSubmit.serializeJson){
-                opcionesAjax.data = JSON.stringify(dataSubmit.serializeJson);
+                opcionesAjax.data = dataSubmit.serializeJson;
             }
             else{
                 if(dataSubmit.serialize){
