@@ -82,14 +82,24 @@ App.prototype.init = function(aplicacion){
     });
 };
 
-App.prototype.render = function( destino, vista, datos ){
+App.prototype.render = function( destino, vista, datos, append, prepend ){
     var app = this;
     datos = datos || {};
     var template = Handlebars.compile(vista);
     var html = template(datos);
     var formulario = (vista.match(/form/))? true : false ;
-    $(destino).html('');
-    $(destino).html(html);
+    if(isDefined(append)){
+        $(html).appendTo(destino);
+
+    }else{
+        if(isDefined(prepend)){
+            $(html).prependTo(destino);
+        }
+        else{
+            $(destino).html('');
+            $(destino).html(html);
+        }
+    }
     var titulo = $(destino).children().data('title');
     document.title = myApp.appname+" - " + (isDefined(titulo)?titulo:'Inicio');
     if ( formulario ) {
