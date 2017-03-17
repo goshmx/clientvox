@@ -1,7 +1,7 @@
 # Clientvox
 Clientvox es un core de librerías que permiten desarrollar de forma mucho más rápida aplicaciones web basadas en Backbone.js
 
-Las librerias con las que trabaja son:
+Las librerias con las trabaja son:
 
 - Backbone
 - Handlebars
@@ -79,8 +79,8 @@ Utiliza como paradigma el método REST para trabajar con los diferentes envíos 
 - Delete: Eliminación de un registro.
 
 ```javascript
-    */El parametro puede ser un objeto o el selector(form) de Jquery a enlazar,*/
-    //Ejemplo myApp.sender.init('.formulario');
+    */ El parametro puede ser un objeto o el selector(form) de Jquery a enlazar */
+    //Ejemplo myApp.sender.init($('.formulario'));
     //Ejemplo myApp.sender.init({backbone: true, model:'user', method: 'post'});
     myApp.sender.init(param);
 ```
@@ -103,6 +103,7 @@ El Objeto que debe mandarse como referencia es el siguiente:
         "callbackError": false //Evento de error del envío
     },
 ```
+Nota: Los campos del objeto no son todos obligatorios.
 
 Pueden solo utilizarse los que vayamos a requerir para situaciones especificas:
 
@@ -130,6 +131,7 @@ Pueden solo utilizarse los que vayamos a requerir para situaciones especificas:
         }
         ajax: true,
         action: 'http://localhost/usuario',
+        serializeJson: true,
         method: 'post',
         callback: function(respuesta,attr){
             console.log(respuesta);
@@ -142,7 +144,7 @@ Pueden solo utilizarse los que vayamos a requerir para situaciones especificas:
 ```
 
 ##### Vía HTML
-El sender puede ser inicializado y enlazado a un form y leer sus propiedades directamente del HTML.
+El sender puede ser inicializado y enlazado a un form y leer sus propiedades directamente del HTML. En el siguiente ejemplo se estan agregando los atributos para hacer un POST a una URL via AJAX, y al terminar llamar al método **metodoExito**.
 
 ```html
     <form class="form-validate" ajax action="http://localhost/usuario" method="post" serializejson callback="metodoExito">
@@ -152,17 +154,61 @@ El sender puede ser inicializado y enlazado a un form y leer sus propiedades dir
     </form>
 ```
 
+O bien si solo queremos hacer uso de la validación, solo será necesario agregar la clase:
+```html
+    <form class="form-validate">
+        <input type="text" name="username" required>
+        <input type="hidden" name="password" required>
+        <button>Enviar<button>
+    </form>
+```
+
 #### Método render
-Permite renderizar una plantilla cargada en un elemento DOM de Jquery proporcionado, extendiendo Handlebars para tal propósito.
+Permite renderizar una plantilla cargada en un elemento DOM de Jquery proporcionado, extendiendo Handlebars para tal propósito, ademas cada vista renderizada, tiene la capacidad de cargar vistas dentro de las mismas.
+
+El método de renderizado es variable, seleccionando una vista en memoria, una vista dentro del HTML via selector de Jquery, o bien, solo ejecutar realizar una petición y un callback.
+
+Permite ingresar datos como objeto o consultar una URL mediante una petición http GET vía AJAX.
 
 ```javascript
     /*
-    * Donde #div es el ID del elemento DOM donde se insertará la plantilla
+    * Donde #div es el elementoDOM de Jquery donde se insertará la plantilla
     * myApp.vistas.users es la plantilla previamente cargada(.hbs).
     * datos Objeto con datos a renderizar en la plantilla.
     */
-    myApp.render("#div",myApp.vistas.users, datos);
+    myApp.render($("#div"),myApp.vistas.users, datos);
 ```
+
+Ejemplo renderizando una plantilla .hbs que internamente tiene 2 plantillas más:
+```hbs
+<h1>Vista principal</h1>
+<p>{{usuario}}</p>
+
+<div class="render-tpl" urlSource="http://swapi.co/api/films/" vista="myApp.vistas.subplantilla" callback="testFuction"></div>
+
+<div class="render-tpl" urlSource="http://swapi.co/api/films/" callback="testFuction"></div>
+```
+
+Los parametros para ejecutar el renderizado dentro de las rutas o controladores de la aplicación son:
+```javascript
+def = {
+        destino:false, //Definido por un div via ID. ej. $(#div)
+        vista: false, //Vista tomada de la memoria interna de la app. ej. myApp.vistas.admin
+        datos: false, //Estructura de datos en json que se envian a la vista
+        posicion: false, //La posicion del div generado prepend | append .
+        urlSource: false, //Si la vista puede realizar una consulta via AJAX a un recurso http por GET
+        vistaInline:false,//Vista tomada directamente del HTML de la plantilla ej. #vista-tpl
+        callback:false, //La función que se ejecutará en caso de ejecutar correctamente la petición de urlSource
+        onError:false //
+    };
+```
+Asimismo, cada vista renderizada, busca internamente por:
+- Otras vistas
+- Datatables
+- Formularios para validación
+
+Nota: Es posible cambiar el titulo del sitio, cada plantilla busca en el primer elemento de render, si llega a encontra el atributo **data-title** lo asignará en el title del sitio.
+
 
 #### Métodos rutas.
 Dentro de la rutas se han implementado algunas funciones para facilitar el trabajo con el manejo de las mismas.
