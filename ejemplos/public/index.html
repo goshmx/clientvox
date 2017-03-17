@@ -3,6 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ejemplo del uso del App</title>
 
+<link rel="stylesheet" href="dependencias/datatables/media/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="dependencias/datatables/media/css/dataTables.material.min.css"/>
 <style>
     #loader{
 	position: fixed;
@@ -33,6 +35,11 @@
 </div>
 <div id="contenedor">Contenido inicial</div>
 
+
+<script id="tpl-hb" type="text/x-handlebars">
+    <h2>Template handlebars</h2>
+</script>
+
 <script type="text/javascript" src="dependencias/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="dependencias/handlebars/handlebars.min.js"></script>
 <script type="text/javascript" src="dependencias/underscore/underscore-min.js"></script>
@@ -43,8 +50,8 @@
 <script type="text/javascript" src="dependencias/datatables/media/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="dependencias/datatables/media/js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="dependencias/jquery.serializeJSON/jquery.serializejson.min.js"></script>
-<script type="text/javascript" src="dependencias/clientvox/dist/desarrollo/app.js"></script>
-<script type="text/javascript" src="dependencias/clientvox/dist/desarrollo/common.js"></script>
+<script type="text/javascript" src="desarrollo/app.js"></script>
+<script type="text/javascript" src="desarrollo/common.js"></script>
 
 
 
@@ -58,5 +65,13 @@
 <a href="#formularioX">Mostrar formulario</a>
 <a href="#ejemplo/">Subruta Ejemplo Index</a>
 <a href="#ejemplo/test2">Subruta Ejemplo Test</a>
+<a href="#tablas">Tablas</a>
+
+<script>
+    function testFuction(datos){
+        console.log("Ejecución de funcion callback en el documento principal (index.html)");
+    }
+</script>
+
 </body>
 </html>

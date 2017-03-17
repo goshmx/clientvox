@@ -32,7 +32,7 @@ function readURL(input) {
  *
  */
 function generaTabla (div, srcData, template){
-  var divDom = $(div);
+  var divDom = div;
   var urlRest = divDom.attr('data-urlRest');
   var srcRest = divDom.attr('data-srcRest');
   var srcTemplate = divDom.attr('data-srcTemplate');
@@ -78,8 +78,8 @@ function generaTabla (div, srcData, template){
         configuracion.columns = template;
       }
     }
-    $(div).DataTable(configuracion);
-    $(div).on( 'xhr.dt', function ( e, settings, processing ) {
+    div.DataTable(configuracion);
+    div.on( 'xhr.dt', function ( e, settings, processing ) {
       myApp.consola('DataTable consultando a: '+settings.ajax.url,'debug');
     }).on( 'error.dt', function ( e, settings, techNote, message ) {
       myApp.consola('Error de datatable reportado:'+message,'error');
@@ -89,6 +89,40 @@ function generaTabla (div, srcData, template){
   else{
     myApp.consola('No esta definido el plugin de datatables','error');
   }
+}
+
+/**
+ * loadHTML
+ *
+ * @description :: Función para renderizar una plantilla en formato de handlebars.
+ * @param  {tpl} string :: Cadena con el HTML para renderizar.
+ * @param  {data} json :: Archivo json para evaluarlo con la cadena HTML.
+ * #returns {string} El resultado de la evaluación por Handlebars.
+ *
+ */
+
+function loadHTML(tpl,data){
+    var template = Handlebars.compile(tpl);
+    if(isDefined(data)){
+        return template(data);
+    }
+    else{
+        return template;
+    }
+}
+
+function putHTML(destinoDom,html,posicion){
+    if(posicion == 'append'){
+        destinoDom.appendTo(destino);
+    }else{
+        if(posicion == 'prepend'){
+            destinoDom.prependTo(destino);
+        }
+        else{
+            destinoDom.html('');
+            destinoDom.html(html);
+        }
+    }
 }
 
 /**

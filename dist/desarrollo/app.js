@@ -82,31 +82,158 @@ App.prototype.init = function(aplicacion){
     });
 };
 
-App.prototype.render = function( destino, vista, datos, append, prepend ){
+App.prototype.render = function( json ){
+    def = {
+        destino:false, //Definido por un div via ID. ej. #div
+        vista: false, //Vista tomada de la memoria interna de la app. ej. myApp.vistas.admin
+        datos: false, //Estructura de datos en json que se envian a la vista
+        posicion: false, //La posicion del div generado prepend | append .
+        urlSource: false, //Si la vista puede realizar una consulta via AJAX a un recurso http por GET
+        vistaInline:false,//Vista tomada directamente del HTML de la plantilla ej. #vista-tpl
+        callback:false, //La función que se ejecutará en caso de ejecutar correctamente la petición de urlSource
+        onError:false //
+    };
     var app = this;
-    datos = datos || {};
-    var template = Handlebars.compile(vista);
-    var html = template(datos);
-    var formulario = (vista.match(/form/))? true : false ;
-    if(isDefined(append)){
-        $(html).appendTo(destino);
+    var dataRender = $.extend({}, this.def, json);
+    var datos, html;
 
-    }else{
-        if(isDefined(prepend)){
-            $(html).prependTo(destino);
+    if(dataRender.destino instanceof jQuery){
+        if(dataRender.destino && dataRender.vista){
+            myApp.consola("La plantilla renderizada esta en memoria");
+            if(dataRender.urlSource){
+                this.sender.init({
+                    action:dataRender.urlSource,
+                    ajax:true,
+                    callback:function(datos){
+                        var html = loadHTML(dataRender.vista, datos);
+                        putHTML(dataRender.destino, html,dataRender.posicion);
+                        app.afterRender(dataRender.destino);
+                        if(dataRender.callback){
+                            dataRender.callback(datos);
+                        }
+                    },
+                    callbackError:function(){
+                        myApp.consola("Ha ocurrido un error al realizar la petición a: "+dataRender.urlSource,"error");
+                        if(dataRender.onError){
+                            dataRender.onError(xhr);
+                        }
+                    }
+                });
+            }
+            else{
+                datos = (dataRender.datos)?dataRender.datos:{};
+                html = loadHTML(dataRender.vista, datos);
+                putHTML(dataRender.destino,html,dataRender.posicion);
+                app.afterRender(dataRender.destino);
+                if(dataRender.callback){
+                    dataRender.callback(datos);
+                }
+            }
         }
         else{
-            $(destino).html('');
-            $(destino).html(html);
+            if(dataRender.destino && dataRender.vistaInline){ //Si la plantilla esta dentro del HTML
+                myApp.consola("La plantilla renderizada esta dentro del HTML");
+                if(dataRender.urlSource){
+                    this.sender.init({
+                        action:dataRender.urlSource,
+                        ajax:true,
+                        callback:function(datos){
+                            var source = $(dataRender.vistaInline).html();
+                            var html = loadHTML(source, datos);
+                            putHTML(dataRender.destino, html,dataRender.posicion);
+                            app.afterRender(dataRender.destino);
+                            if(dataRender.callback){
+                                dataRender.callback(datos);
+                            }
+                        },
+                        callbackError:function(){
+                            myApp.consola("Ha ocurrido un error al realizar la petición a: "+dataRender.urlSource,"error");
+                            if(dataRender.onError){
+                                dataRender.onError(xhr);
+                            }
+                        }
+                    });
+                }
+                else{
+                    datos = (dataRender.datos)?dataRender.datos:{};
+                    var source = $(dataRender.vistaInline).html();
+                    html = loadHTML(source, datos);
+                    putHTML(dataRender.destino,html,dataRender.posicion);
+                    app.afterRender(dataRender.destino);
+                    if(dataRender.callback){
+                        dataRender.callback(datos);
+                    }
+                }
+            }
+            else{
+                if(dataRender.urlSource && dataRender.callback){
+                    myApp.consola("El div escuchado solo tiene una petición y un callback");
+                    this.sender.init({
+                        action:dataRender.urlSource,
+                        ajax:true,
+                        callback:function(datos){
+                            if(dataRender.callback){
+                                dataRender.callback(datos);
+                            }
+                        },
+                        callbackError:function(){
+                            myApp.consola("Ha ocurrido un error al realizar la petición a: "+dataRender.urlSource,"error");
+                            if(dataRender.onError){
+                                dataRender.onError(xhr);
+                            }
+                        }
+                    });
+                }else{
+                    myApp.consola("Solo buscara plantillas dentro del div");
+                    myApp.consola("No hay plantilla a renderizar");
+                    app.afterRender(dataRender.destino);
+                }
+            }
         }
     }
-    var titulo = $(destino).children().data('title');
-    document.title = myApp.appname+" - " + (isDefined(titulo)?titulo:'Inicio');
-    if ( formulario ) {
-        $('.form-validate').parsley();
-        app.sender.init('.form-validate');
+    else{
+        myApp.consola("El elemento {destino} debe ser un elemento Jquery ej. $('#div')","error");
+        return false;
     }
-    generaTabla('.data-tbl'); /*Asignacion de datatables por default*/
+};
+
+App.prototype.afterRender = function( div ){
+    myApp.consola("Entra a un subtemplate");
+    var app = this;
+    var titulo = div.children().data('title'); //Se puede actualizar el titulo del sitio agregango el attr "data-title" al primer elemento de la vista renderizada.
+    document.title = myApp.appname+" - " + (isDefined(titulo)?titulo:'Inicio');
+    //Verifica si existen formularios dentro del div renderizado para agregarle validación
+    if (div.find('.form-validate').length) {
+        div.find('.form-validate').each(function() {
+            var dom = $(this);
+            dom.parsley();
+            app.sender.init(dom);
+        });
+    }
+    //Verifica si existen tablas dentro del div renderizado para agregarle datatables
+    if (div.find('.data-tbl').length) {
+            div.find('.data-tbl').each(function() {
+                generaTabla($(this)); /*Asignacion de datatables por default*/
+            });
+    }
+
+    //Busca si hay algún div que sea una subplantilla
+    if (div.find('.render-tpl').length) {
+        myApp.consola("Evisten subplantillas","debug");
+        div.find('.render-tpl').each(function() {
+            var divDom = $(this);
+            var tpl = {
+                destino:divDom,
+                vista: (isDefined(divDom.attr('vista'))?(eval(divDom.attr('vista'))):false),
+                posicion: (isDefined(divDom.attr('posicion'))?(divDom.attr('posicion')):false),
+                urlSource: (isDefined(divDom.attr('urlSource'))?(divDom.attr('urlSource')):false),
+                vistaInline: (isDefined(divDom.attr('vistaInline'))?(divDom.attr('vistaInline')):false),
+                callback: (isDefined(divDom.attr('callback'))?(eval(divDom.attr('callback'))):false),
+                onError: (isDefined(divDom.attr('callback'))?(eval(divDom.attr('onError'))):false)
+            };
+            app.render(tpl);
+        });
+    }
 };
 
 App.prototype.sender = {
@@ -127,8 +254,8 @@ App.prototype.sender = {
     init: function(div){
         myApp.consola('inicializacion de dataSubmit','debug');
         if(typeof div != 'undefined'){
-            if(typeof div === 'string'){
-                if ($(div).length) { this.form(div); }
+            if(div instanceof jQuery){
+                if (div.length) { this.form(div); }
                 else{  }
             }
             else{ if(typeof div === 'object'){ this.object(div); }}
@@ -139,8 +266,7 @@ App.prototype.sender = {
     },
     form: function(div){
         myApp.consola('Seleccion de Form de dataSubmit','debug');
-        var funcion = this;
-        var divDom = $(div);
+        var divDom = div;
         var attrs = divDom.attrs();
 
         if ((divDom.find('input[type="file"]').length>0) && (isDefined(divDom.attr('backbone')) === false) && (isDefined(divDom.attr('ajax')) === false)) {

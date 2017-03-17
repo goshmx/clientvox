@@ -2,15 +2,16 @@
 
 "use strict";
 
-var http = require('http');
-var publicFolder = require('node-static');
+var express = require('express');
+var app = express();
 
-var file = new publicFolder.Server('./public');
+app.use(express.static('public'));
+app.use(express.static('../dist'));
 
-var server = http.createServer(function (request, response) {
-    request.addListener('end', function () {
-        file.serve(request, response);
-    }).resume();
+app.get('/', function (req, res) {
+    res.send('Hello World!');
 });
 
-server.listen(8888);
+app.listen(3000, function () {
+    console.log('Example app listening on port 3000!');
+});

@@ -2,8 +2,8 @@ var myApp = new App({
     debug: true,
     appname: "Aplicacion Demo",
     url:{
-        app: 'http://localhost:8888/',
-        api: 'http://localhost:8888/',
+        app: 'http://localhost:3000/',
+        api: 'http://localhost:3000/',
         vistas: '/js/vistas/',
         esquemas: '/js/esquemas/'
     },
@@ -12,7 +12,9 @@ var myApp = new App({
     carga: ["vistas",'esquemas',"catalogos"], // Opcional si no se especifica se intentan cargas los 3 elementos
     vistas: {
         'principal' : '{vistas}principal.hbs',
-        'admin': '{vistas}admin/index.hbs'
+        'admin': '{vistas}admin/index.hbs',
+        'subplantilla': '{vistas}subplantilla.hbs',
+        'tablaView': '{vistas}tablas.hbs'
     },
     esquemas: {
     },

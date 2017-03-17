@@ -66,9 +66,9 @@ var rutas = Backbone.Router.extend({
         var router = this;
         if (!callback) callback = this[name];
         var f = function() {
-            myApp.consola('Evento de ruta '+route+' antes de renderizar', 'debug');
+            //myApp.consola('Evento de ruta '+route+' antes de renderizar', 'debug');
             callback.apply(router, arguments);
-            myApp.consola('Evento de ruta despues de renderizar', 'debug');
+            //myApp.consola('Evento de ruta despues de renderizar', 'debug');
             //dataSubmit.init('.form-validate');/*Validacion de formularios por default COLOCAR EN CLIENTVOX TAMBIEN*/
         };
         return Backbone.Router.prototype.route.call(this, route, name, f);
@@ -76,6 +76,7 @@ var rutas = Backbone.Router.extend({
     routeParams: {},
     routes : {
     '' : 'cargaVista',
+    'tablas' : 'tablaController',
     'asignar-vista' : 'cargaVista',
     'limpiar' : 'limpiar',
     'formularioX' : 'mostrarFormulario',
@@ -85,15 +86,34 @@ var rutas = Backbone.Router.extend({
     var datos = {
       usuario : "Un Nombre Aquí"
     };
-    myApp.render("#contenedor",myApp.vistas.principal,datos);
+    myApp.render(
+        {
+            destino:$("#contenedor"),
+            vista: myApp.vistas.principal,
+            datos: datos,
+            callback: function(){
+                console.log("Vista renderizada!");
+            }
+        });
+
     //Ejemplo de envio de peticion GET via AJAX
-    myApp.sender.init({action:'http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=44db6a862fba0b067b1930da0d769e98', ajax:true, callback:function(datos){console.log(datos);}});
+    //myApp.sender.init({action:'http://swapi.co/api/films/', ajax:true, callback:function(datos,attrs){console.log("Renderizado de SWAPI");}});
+    },
+    tablaController: function(){
+        myApp.render(
+            {
+                destino:$("#contenedor"),
+                vista: myApp.vistas.tablaView,
+                callback: function(){
+                    console.log("Vista renderizada!");
+                }
+            });
     },
     limpiar: function(){
     $('#contenedor').html("");
     },
     mostrarFormulario: function(){
-    myApp.render("#contenedor",myApp.vistas.admin);
+    myApp.render({destino:$("#contenedor"),vista:myApp.vistas.admin});
     },
     invocaEjemploRoute: function(subroute) {
         EjemploRouter = new EjemploRouter("ejemplo/");
