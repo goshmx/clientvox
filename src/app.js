@@ -128,6 +128,10 @@ App.prototype.init = function(aplicacion){
             cargaElementos(llave,aplicacion[llave],false);
         });
     }
+    $('body').on( "updateStore", function() {
+        localStorage.removeItem("clientvoxData");
+        window.location.replace(aplicacion.url.app);
+    });
 };
 
 App.prototype.render = function( json ){

@@ -60,7 +60,7 @@ App.prototype.init = function(aplicacion){
                 elementos[llave] = d;
                 if (porcentaje === 100) {
                     app.consola('========== Finalizando la carga de elementos ==========','debug');
-                    if(store == true){
+                    if(store === true){
                         storeData();
                     }
                     else{
@@ -95,6 +95,7 @@ App.prototype.init = function(aplicacion){
     };
 
     var storeActivo = false;
+    var total;
 
     if(typeof aplicacion.store != "undefined"){
         if(aplicacion.store){
@@ -108,7 +109,7 @@ App.prototype.init = function(aplicacion){
 
     if(storeActivo){
         if (typeof(localStorage.clientvoxData) === "undefined") {
-            var total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
+            total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
             app.consola('Total de elementos a cargar: ' +total,'debug');
             aplicacion.carga.forEach(function(llave, indice){
                 cargaElementos(llave,aplicacion[llave],true);
@@ -121,12 +122,16 @@ App.prototype.init = function(aplicacion){
         }
     }
     else{
-        var total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
+        total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
         app.consola('Total de elementos a cargar: ' +total,'debug');
         aplicacion.carga.forEach(function(llave, indice){
             cargaElementos(llave,aplicacion[llave],false);
         });
     }
+    $('body').on( "updateStore", function() {
+        localStorage.removeItem("clientvoxData");
+        window.location.replace(aplicacion.url.app);
+    });
 };
 
 App.prototype.render = function( json ){
