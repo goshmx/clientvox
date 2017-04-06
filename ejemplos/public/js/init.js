@@ -1,5 +1,6 @@
 var myApp = new App({
     debug: true,
+    store:true,
     appname: "Aplicacion Demo",
     url:{
         app: 'http://localhost:3000/',

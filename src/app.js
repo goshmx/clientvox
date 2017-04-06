@@ -5,6 +5,7 @@ var App = function(opciones){
     var p = this;
     p.appname = opciones.appname;
     p.debug = opciones.debug;
+    p.store = opciones.store;
     p.rutas = opciones.rutas;
     p.loader = opciones.loader || 'loader';
     p.url = opciones.url || {};
@@ -36,10 +37,7 @@ App.prototype.init = function(aplicacion){
     app = this;
     app.consola('Inicializando App','debug');
     var actual = 0;
-    var total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
-    this.consola('Total de elementos a cargar: ' +total,'debug');
-
-    var cargaElementos = function(tipo,elementos){
+    var cargaElementos = function(tipo,elementos,store){
         app.consola('========== Cargando ' + tipo + ' ==========','debug');
         var llaves = Object.keys(elementos);
         var destino = $('#'+aplicacion.loader+' .txt');
@@ -62,8 +60,12 @@ App.prototype.init = function(aplicacion){
                 elementos[llave] = d;
                 if (porcentaje === 100) {
                     app.consola('========== Finalizando la carga de elementos ==========','debug');
-                    $('#'+aplicacion.loader).remove();
-                    Backbone.history.start();
+                    if(store === true){
+                        storeData();
+                    }
+                    else{
+                        initializeRouter();
+                    }
                 }
             }).fail(function(){
                 app.consola(this,'error');
@@ -76,10 +78,56 @@ App.prototype.init = function(aplicacion){
             });
         });
     };
+    var storeData = function(){
+        app.consola('Almacenando datos en localStorage','debug');
+        var localData = {};
+        aplicacion.carga.forEach(function(llave, indice){
+            localData[llave] = aplicacion[llave];
+        });
+        localStorage.setItem("clientvoxData", JSON.stringify(localData));
+        initializeRouter();
+    };
+    var initializeRouter = function(){
+        $(document).ready(function(){
+            $('#'+aplicacion.loader).remove();
+            Backbone.history.start();
+        });
+    };
 
-    aplicacion.carga.forEach(function(llave, indice){
-        cargaElementos(llave,aplicacion[llave]);
-    });
+    var storeActivo = false;
+    var total;
+
+    if(typeof aplicacion.store != "undefined"){
+        if(aplicacion.store){
+            storeActivo = true;
+            if (typeof(Storage) === "undefined") {
+                app.consola("Se ha activado la bandera del local storage, sin embargo el navegador actual no tiene sorporte",'error');
+                storeActivo = false;
+            }
+        }
+    }
+
+    if(storeActivo){
+        if (typeof(localStorage.clientvoxData) === "undefined") {
+            total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
+            app.consola('Total de elementos a cargar: ' +total,'debug');
+            aplicacion.carga.forEach(function(llave, indice){
+                cargaElementos(llave,aplicacion[llave],true);
+            });
+        }
+        else{
+            console.log(aplicacion);
+            $.extend( aplicacion, JSON.parse(localStorage.clientvoxData) );
+            initializeRouter();
+        }
+    }
+    else{
+        total = aplicacion.carga.map(function(a){return Object.keys(aplicacion[a]).length;}).reduce(function(prev,cur){return cur + prev;},0);
+        app.consola('Total de elementos a cargar: ' +total,'debug');
+        aplicacion.carga.forEach(function(llave, indice){
+            cargaElementos(llave,aplicacion[llave],false);
+        });
+    }
 };
 
 App.prototype.render = function( json ){

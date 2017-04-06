@@ -198,3 +198,9 @@ function isDefined(variable){
     return formData;
   };
 })(jQuery);
+
+/**
+ *
+ * JSONStringfy Extend
+ *
+ */
